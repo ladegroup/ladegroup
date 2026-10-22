@@ -155,14 +155,19 @@ footer{padding:30px 0;color:var(--mute);font-size:.85rem;border-top:1px solid va
 <section id="contact"><div class="wrap">
  <h2>Start a conversation.</h2>
  <p class="lead">Contracting officers, primes, and agency teams: tell us what you need.</p>
- <form id="f">
-  <input id="n" placeholder="Name" aria-label="Name" autocomplete="name">
-  <input id="o" placeholder="Agency or company" aria-label="Agency or company" autocomplete="organization">
-  <input id="e" type="email" placeholder="Email" aria-label="Email" autocomplete="email">
-  <textarea id="m" rows="3" placeholder="What do you need?" aria-label="Message"></textarea>
-  <input type="text" id="hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
-  <button class="cta" type="submit">Send message</button>
-  <p class="hint" id="st" role="status"></p>
+ <form id="f" action="https://formspree.io/f/mbggrpyn" method="POST">
+  <input id="n" name="name" placeholder="Name" aria-label="Name" autocomplete="name" data-fs-field>
+  <span class="hint" data-fs-error="name" role="alert"></span>
+  <input id="o" name="organization" placeholder="Agency or company" aria-label="Agency or company" autocomplete="organization" data-fs-field>
+  <span class="hint" data-fs-error="organization" role="alert"></span>
+  <input id="e" name="email" type="email" placeholder="Email" aria-label="Email" autocomplete="email" data-fs-field required>
+  <span class="hint" data-fs-error="email" role="alert"></span>
+  <textarea id="m" name="message" rows="3" placeholder="What do you need?" aria-label="Message" data-fs-field required></textarea>
+  <span class="hint" data-fs-error="message" role="alert"></span>
+  <input type="text" id="hp" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+  <button class="cta" type="submit" data-fs-submit-btn>Send message</button>
+  <p class="hint" id="st" data-fs-success role="status"></p>
+  <p class="hint" data-fs-error role="alert"></p>
  </form>
  <div class="facts"><span>Michael Ogunlade</span><a href="tel:+14104120416">+1 (410) 412-0416</a><span>www.ladegrp.com</span></div>
 </div></section>
@@ -205,11 +210,8 @@ function draw(){rows.innerHTML="";A.forEach(function(a){
 draw();
 document.querySelectorAll(".glow").forEach(function(g){g.addEventListener("pointermove",function(e){var r=g.getBoundingClientRect();g.style.setProperty("--x",(e.clientX-r.left)+"px");g.style.setProperty("--y",(e.clientY-r.top)+"px")})});
 document.querySelectorAll(".code").forEach(function(c){c.onclick=function(){var v=c.dataset.c;try{navigator.clipboard.writeText(v)}catch(e){}$("hint").textContent="Copied "+v+"."}});
-$("f").onsubmit=function(ev){ev.preventDefault();var st=$("st"),EP="YOUR_FORM_ENDPOINT";
- if($("hp").value)return;
- if(EP.indexOf("YOUR_")==0){st.textContent="The form is not connected yet.";return}
- st.textContent="Sending...";
- fetch(EP,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({name:$("n").value,organization:$("o").value,email:$("e").value,message:$("m").value})}).then(function(r){if(!r.ok)throw 0;$("f").reset();st.textContent="Thank you. Your message was sent and we will respond shortly."}).catch(function(){st.textContent="Something went wrong. Please call us at +1 (410) 412-0416."})};
+window.formspree=window.formspree||function(){(window.formspree.q=window.formspree.q||[]).push(arguments)};
+window.formspree("initForm",{formElement:"#f",formId:"mbggrpyn"});
 /* network field */
 (function(){
  var cv=$("cv"),x=cv.getContext("2d"),W,H,P=[],m={x:-999,y:-999},rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
@@ -235,5 +237,6 @@ $("f").onsubmit=function(ev){ev.preventDefault();var st=$("st"),EP="YOUR_FORM_EN
  step();
 })();
 </script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 </body>
 </html>
